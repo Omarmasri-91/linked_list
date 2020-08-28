@@ -1,5 +1,5 @@
 class LinkedList
-    attr_accessor :name
+    attr_accessor :name, :head, :tail, :size
     def initialize(name)
         @name=name
         @head=nil
@@ -33,30 +33,23 @@ class LinkedList
         end
         @size+=1
     end
-    def size
-        puts "The Linked list size is #{@size} nodes"
-        return @size
-    end
-    def head
-        puts "The first node in the Linked list is #{@head}"
-        return @head
-    end
-    def tail
-        puts "The last node in the Linked list is #{@tail}"
-        return @tail
-    end
     def at(index)
-        puts "The node at index #{index} is:"
-        temp_node=@head
-        if index < @size && @size > 0
-            index.times do |node|
-                temp_node=temp_node.next_node
+        if index < @size
+            puts "The node at index #{index} is:"
+            temp_node=@head
+            if index < @size && @size > 0
+                index.times do |node|
+                    temp_node=temp_node.next_node
+                end
+            else
+                temp_node=nil
             end
+            puts temp_node
+            return temp_node
         else
-            temp_node=nil
+            puts "The last index in this list is #{@size-1}"
+            return nil
         end
-        puts temp_node
-        return temp_node
     end
     def pop
         if @tail!= nil
@@ -71,41 +64,24 @@ class LinkedList
         end
     end
     def contains?(value)
-        if @size > 0
-            temp_node=@head
-            (@size).times do 
-                if temp_node.value == value
-                    return true
-                end
-                temp_node=temp_node.next_node
-            end
-            if temp_node == nil
-                return false
-            end
-        else
-            return false
+        temp_node=@head
+        (@size).times do 
+            return true if temp_node.value == value
+            temp_node=temp_node.next_node
         end
+        false
     end
     def find(value)
         index=0
-        found="no"
         if @size > 0
             temp_node=@head
-            @size.times do 
-                if temp_node.value != value
-                    temp_node=temp_node.next_node
-                    index+=1
-                else
-                    found="yes"
-                    return index
-                end
+            while temp_node!=nil
+                return index if temp_node.value==value
+                temp_node=temp_node.next_node
+                index+=1
             end
-            if found="no"
-                return nil
-            end
-        else
-            return nil
         end
+        nil
     end
     def to_s
         temp_node=@head
@@ -114,6 +90,32 @@ class LinkedList
             temp_node=temp_node.next_node
         end
         print "nil"
+    end
+    def insert_at(value, index)
+        if index == @size-1
+            append(value)
+            @size+=1
+        elsif index < @size
+            new_node=Node.new(value)
+            next_node=at(index)
+            new_node.next_node=next_node
+            previous_node=at(index-1)
+            previous_node.next_node=new_node
+            @size+=1
+        else
+            puts "Max index to use is #{@size}"
+        end
+    end
+    def remove_at(index)
+        if index < @size
+            remove_node=at(index)
+            prev_node=at(index-1)
+            next_node=at(index+1)
+            prev_node.next_node=next_node
+            @size-=1
+        else
+            puts "the list's last index is #{@size-1}"
+        end
     end
 end
 
